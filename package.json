@@ -1,0 +1,52 @@
+{
+  "name": "obs-upload-checkpoint",
+  "version": "1.0.0",
+  "description": "基于javaScript封装的华为云obs文件上传，支持断点续传、云服务器文件删除等功能",
+  "keywords": [
+    "obs",
+    "upload",
+    "uploadFile",
+    "upload-progress",
+    "resumeHook",
+    "uploadCheckpoint"
+  ],
+  "main": "dist/obs-upload-checkpoint.esm.mjs",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "rollup -c",
+    "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s",
+    "release": "standard-version",
+    "pub": "npm publish && cnpm sync obs-upload-checkpoint",
+    "pub:alpha": "npm publish --tag=alpha && cnpm sync obs-upload-checkpoint"
+  },
+  "exports": {
+    ".": {
+      "import": "./dist/obs-upload-checkpoint.esm.mjs",
+      "require": "./dist/obs-upload-checkpoint.common.js"
+    },
+    "./dist/*": "./dist/*"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/liulinmei/obs-upload-checkpoint.git"
+  },
+  "author": "LLM",
+  "homepage": "https://github.com/liulinmei/obs-upload-checkpoint",
+  "devDependencies": {
+    "@babel/cli": "^7.17.6",
+    "@babel/core": "^7.17.7",
+    "@babel/plugin-external-helpers": "^7.16.7",
+    "@babel/plugin-transform-runtime": "^7.22.4",
+    "@babel/preset-env": "^7.16.11",
+    "@rollup/plugin-babel": "^5.3.1",
+    "@rollup/plugin-commonjs": "^21.0.2",
+    "@rollup/plugin-json": "^4.1.0",
+    "rollup-plugin-node-resolve": "^5.2.0",
+    "rollup-plugin-terser": "^7.0.2"
+  },
+  "dependencies": {
+    "core-js": "^2.6.12",
+    "esdk-obs-browserjs": "^3.22.3",
+    "lodash-es": "^4.17.21"
+  }
+}
