@@ -11,6 +11,7 @@
     "uploadCheckpoint"
   ],
   "main": "dist/obs-upload-checkpoint.esm.mjs",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "rollup -c",

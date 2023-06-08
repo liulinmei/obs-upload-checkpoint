@@ -1,4 +1,4 @@
-import uploadFileObsServe from "./breakpointResume.js";
+import uploadFileObsServe from './breakpointResume.js'
 
 const uploadTypeMap = {
   //不同的上传类型对应的不同的配置
@@ -19,7 +19,7 @@ const uploadTypeMap = {
         Key,
         obsInstance,
         upFileArrInstance,
-      });
+      })
     }, //断点续传上传函数
   },
   // video: {
@@ -44,7 +44,7 @@ const uploadTypeMap = {
   //     });
   //   },
   // },
-};
+}
 // 获取对应的上传函数
 function getUploadFunction({
   uploadType,
@@ -53,15 +53,16 @@ function getUploadFunction({
   fileObj,
   upFileArrInstance,
 }) {
-  uploadType = uploadType || "breakpointResume";
-  const uploadFun =
-    uploadTypeMap[uploadType] && uploadTypeMap[uploadType].uploadFun;
+  uploadType = uploadType || 'breakpointResume'
+  let uploadTypeItem =
+    uploadTypeMap[uploadType] || uploadTypeMap.breakpointResume || {}
+  const uploadFun = uploadTypeItem.uploadFun
   uploadFun({
     Bucket,
     fileObj,
     Key,
     upFileArrInstance,
-  });
+  })
 }
 
-export { getUploadFunction };
+export { getUploadFunction }
