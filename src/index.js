@@ -1,5 +1,6 @@
 import _ from 'lodash-es'
 import UploadingFileArr from './fileConfig/uploadingFiles'
+import { getBucketAndKeyByUrl } from './fileConfig/fileUtil'
 import { getUploadFunction } from './obsConfig/uploadType/index'
 import {
   handleBeforeUpload,
@@ -106,4 +107,5 @@ export {
   multiDelFile, //批量删除已经上传的文件
   downloadFile, //下载已经上传的文件
   getSignedFileUrl, //获取临时授权访问URL;
+  getBucketAndKeyByUrl, //根据文件url获取Bucket、key、endPoint
 }
