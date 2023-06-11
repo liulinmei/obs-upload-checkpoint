@@ -85,3 +85,25 @@ export default function createFileInstance({
     ...extendAttrs,
   })
 }
+// 获取授权所需的ak、sk
+export async function saveAuth({ fileInstance, getAuth, uploadError }) {
+  try {
+    const { ak, sk } = await getAuth()
+    if (!ak || !sk) {
+      uploadError && uploadError('授权所需的ak或者sk获取失败！')
+      if (!uploadError) throw new Error('授权所需的ak或者sk获取失败！')
+    }
+    fileInstance.ak = ak
+    fileInstance.sk = sk
+  } catch (error) {
+    console.log('saveAuth-error', error)
+  }
+}
+// 改变文件上传状态
+export function changeStatus(fileInstance) {
+  fileInstance.fileInfo[getFileInfoKey('status', fileInstance.resFileKey)] =
+    fileInstance.toStatusVal
+  fileInstance.changingStatus = false //判断取消成功了再重置改变状态
+  fileInstance.statusChange &&
+    fileInstance.statusChange(fileInstance.toStatusVal)
+}

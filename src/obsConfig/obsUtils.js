@@ -31,12 +31,7 @@ function handleBeforeUpload({
     handleUploadError(
       '文件上传前的回调函数（onBeforeUpload）返回了false则不进行文件上传'
     )
-  return {
-    Bucket,
-    Key: fileInstance.Key,
-    fileInfo: fileInstance.fileInfo,
-    fileObj: fileInstance.row,
-  }
+  return fileInstance
 }
 
 // 上传失败处理函数
@@ -220,6 +215,52 @@ async function getSignedFileUrl({ fileUrl, ak, sk }) {
   return res
 }
 
+// 验证是否可以上传
+function vertifyUpload(fileInstance, getAkSuccess) {
+  console.log(
+    '进入uploadFileObsServe',
+    JSON.parse(JSON.stringify(fileInstance))
+  )
+  /*
+   *1.文件的上传状态为暂停时，不发起上传请求(用于解决文件上传ak\sk未获取完成\obs未初始化完成时就点击了暂停，出现无法暂停的bug)
+   */
+  if (fileInstance.toStatusVal === -1) {
+    console.log('进入暂停-uploadFileObsServe')
+    // fileInstance.obsInited = true;
+    getAkSuccess
+      ? (fileInstance.fileInfo[
+          getFileInfoKey('status', fileInstance.resFileKey)
+        ] = fileInstance.toStatusVal)
+      : '' //ak获取成功后的二次校验
+    fileInstance.toStatusVal = undefined
+    fileInstance.changingStatus = false
+    return {
+      createInterf: false, //是否新建接口调用
+      uploadStatus: false, //接口请求状态
+    }
+  }
+  if (fileInstance.toStatusVal == 1 && fileInstance.uploadStatus) {
+    //文件处于上传中的状态时，有接口请求尚未结束，不新发起接口请求（解决上传时，接口正在请求，用户快速点击暂停、续传，出现接口重复请求问题）
+    console.log(
+      '文件处于上传中的状态时，有接口请求尚未结束-uploadFileObsServe',
+      JSON.parse(JSON.stringify(fileInstance))
+    )
+    // fileInstance.toStatusVal = undefined;
+    // fileInstance.fileInfo[getFileInfoKey("status", fileInstance.resFileKey)] =
+    //   fileInstance.toStatusVal;
+    return {
+      createInterf: false, //是否新建接口调用
+      uploadStatus: true, //接口请求状态
+    }
+  }
+  // fileInstance.obsInited = false;
+  // fileInstance.uploadStatus = true;
+  return {
+    createInterf: true, //是否新建接口调用
+    uploadStatus: true, //接口请求状态
+  }
+}
+
 export {
   handleBeforeUpload,
   handleUploadError,
@@ -229,4 +270,5 @@ export {
   multiDelObsServeFile,
   downloadFile,
   getSignedFileUrl,
+  vertifyUpload,
 }

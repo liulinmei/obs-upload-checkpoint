@@ -68,7 +68,6 @@ export default {
           Key: 'Key',
           id: 'vodId',
         }, //上传成功后想要保留的字段，未配置的字段将不会保留(可配置项有 name、size、type、percentage、Key、url、status)
-        Bucket:"your Bucket",//桶名（建议使用默认）
         module: 'material_pc/inquiry', //文件上传后所处的文件夹（建议格式：项目名/模块名）（文件夹名默认member_center，很不推荐使用默认值）
         onBeforeUpload: (fileInfo) => {
           // 如果此回调函数返回false则文件不会被上传到obs服务，功能类似element上传组件的的before-upload

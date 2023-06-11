@@ -10,6 +10,7 @@ import {
   getSignedFileUrl,
 } from './obsConfig/obsUtils'
 import { pauseOrStartUpload } from './obsConfig/uploadType/breakpointResume.js'
+import { saveAuth, changeStatus } from './fileConfig/fileInstance'
 const upFileArrInstance = new UploadingFileArr() //初始化正在上传的文件列表
 /*
  * @Descripttion: 删除已经上传的文件
@@ -71,10 +72,10 @@ function uploadFile({
   uploadSuccess,
   uploadError,
   uploadProgress,
+  getAuth,
   ...params
 }) {
-  const { Bucket, Key, fileInfo, fileObj } = handleBeforeUpload({
-    // fileInstance: this,
+  const fileInstance = handleBeforeUpload({
     file,
     onBeforeUpload,
     uploadSuccess,
@@ -83,16 +84,31 @@ function uploadFile({
     upFileArrInstance,
     ...params,
   })
+  const { fileInfo } = fileInstance
+  initUpload({
+    fileInstance,
+    getAuth,
+    uploadType: params.uploadType,
+    uploadError,
+  })
+  return fileInfo
+}
+async function initUpload({ fileInstance, getAuth, uploadType, uploadError }) {
+  const { Bucket, Key, row: fileObj, fileInfo } = fileInstance
+  await saveAuth({ fileInstance, getAuth, uploadError })
+  if (fileInfo.toStatusVal === -1) {
+    //如果此时用户已经点击了暂停，则不再发起上传，并将文件状态改为暂停状态
+    changeStatus(fileInstance)
+    return
+  }
   // 调用type对应的上传函数
   getUploadFunction({
-    uploadType: params.uploadType,
+    uploadType,
     Bucket,
     Key,
     fileObj,
     upFileArrInstance,
   })
-  console.log('fileInfo', fileInfo)
-  return fileInfo
 }
 
 // 上传类型为断点续传时可用于暂停/续传文件操作
