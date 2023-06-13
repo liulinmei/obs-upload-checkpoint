@@ -56,7 +56,9 @@ function getUploadFunction({
   uploadType = uploadType || 'breakpointResume'
   let uploadTypeItem =
     uploadTypeMap[uploadType] || uploadTypeMap.breakpointResume || {}
-  const uploadFun = uploadTypeItem.uploadFun
+  console.log('获取对应的上传函数', uploadType, uploadTypeItem)
+  const uploadFun =
+    uploadTypeItem.uploadFun || uploadTypeMap.breakpointResume.uploadFun
   uploadFun({
     Bucket,
     fileObj,

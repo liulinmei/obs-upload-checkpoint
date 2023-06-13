@@ -14,7 +14,7 @@ function createAndSaveClient({ ak, sk, endPoint, obsType }) {
   endPoint = endPoint || obsType.endPoint
   if (!ak || !sk || !endPoint) {
     throw new Error(
-      `请传入${!ak ? 'ak' : ''}${!sk ? 'sk' : ''}${
+      `请传入${!ak ? 'ak' : ''}、${!sk ? 'sk' : ''}${
         !endPoint ? 'endPoint' : ''
       }值`
     )

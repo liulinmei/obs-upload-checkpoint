@@ -1,15 +1,16 @@
 import _ from 'lodash-es'
 import UploadingFileArr from './fileConfig/uploadingFiles'
 import { getBucketAndKeyByUrl } from './fileConfig/fileUtil'
-import { getUploadFunction } from './obsConfig/uploadType/index'
 import {
   handleBeforeUpload,
   singleDelObsServeFile,
   multiDelObsServeFile,
   downloadFile,
   getSignedFileUrl,
+  handleUploadError,
 } from './obsConfig/obsUtils'
 import { pauseOrStartUpload } from './obsConfig/uploadType/breakpointResume.js'
+import { getUploadFunction } from './obsConfig/uploadType/index'
 import { saveAuth, changeStatus } from './fileConfig/fileInstance'
 const upFileArrInstance = new UploadingFileArr() //初始化正在上传的文件列表
 /*
@@ -82,6 +83,7 @@ function uploadFile({
     uploadError,
     uploadProgress,
     upFileArrInstance,
+    getAuth,
     ...params,
   })
   const { fileInfo } = fileInstance
@@ -89,16 +91,22 @@ function uploadFile({
     fileInstance,
     getAuth,
     uploadType: params.uploadType,
-    uploadError,
   })
   return fileInfo
 }
-async function initUpload({ fileInstance, getAuth, uploadType, uploadError }) {
+
+export async function initUpload({ fileInstance, getAuth, uploadType }) {
   const { Bucket, Key, row: fileObj, fileInfo } = fileInstance
-  await saveAuth({ fileInstance, getAuth, uploadError })
+  fileInstance.obsInited = false
+  const { ak, sk } = (await saveAuth({ fileInstance, getAuth })) || {}
   if (fileInfo.toStatusVal === -1) {
     //如果此时用户已经点击了暂停，则不再发起上传，并将文件状态改为暂停状态
     changeStatus(fileInstance)
+    return
+  }
+  if (!ak || !sk) {
+    //ak、sk获取失败
+    handleUploadError('授权所需的ak或者sk获取失败！', fileInstance)
     return
   }
   // 调用type对应的上传函数

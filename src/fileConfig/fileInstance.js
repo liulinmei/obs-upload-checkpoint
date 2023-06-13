@@ -86,18 +86,14 @@ export default function createFileInstance({
   })
 }
 // 获取授权所需的ak、sk
-export async function saveAuth({ fileInstance, getAuth, uploadError }) {
-  try {
-    const { ak, sk } = await getAuth()
-    if (!ak || !sk) {
-      uploadError && uploadError('授权所需的ak或者sk获取失败！')
-      if (!uploadError) throw new Error('授权所需的ak或者sk获取失败！')
-    }
+export async function saveAuth({ fileInstance, getAuth }) {
+  const { ak, sk } = (await getAuth()) || {}
+  if (ak && sk) {
     fileInstance.ak = ak
     fileInstance.sk = sk
-  } catch (error) {
-    console.log('saveAuth-error', error)
+    return { ak, sk }
   }
+  return {}
 }
 // 改变文件上传状态
 export function changeStatus(fileInstance) {

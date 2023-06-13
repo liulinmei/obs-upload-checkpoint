@@ -7,6 +7,7 @@ import {
   vertifyUpload,
 } from '../obsUtils'
 import getObsClient from '../obsInstance'
+import { initUpload } from '../../index'
 //上传文件到obs服务器
 async function uploadFileObsServe({
   fileParams = {},
@@ -19,11 +20,22 @@ async function uploadFileObsServe({
     fileInstance || upFileArrInstance.getFileInstance(Key || fileParams.Key)
   beforeSuccess ? (fileInstance.beforeSuccess = beforeSuccess) : ''
   try {
+    console.log('进入uploadFileObsServe', fileInstance)
     if (fileInstance.obsInited && !vertifyUpload(fileInstance).createInterf)
       return //初始化过
     var cp
     fileInstance.uploadStatus = true
     const { Bucket, ak, sk, endPoint } = fileInstance
+    if (!ak || !sk) {
+      //初次的授权没有获取成功
+      initUpload({
+        fileInstance,
+        getAuth: fileInstance.getAuth,
+        uploadType: fileInstance.uploadType,
+        uploadError: fileInstance.uploadError,
+      })
+      return
+    }
     const obsInstance = await getObsClient({
       ak,
       sk,
@@ -158,6 +170,7 @@ async function uploadFileObsServe({
 function pauseOrStartUpload({ Key, upFileArrInstance }) {
   if (!Key) return
   let fileInstance = upFileArrInstance.getFileInstance(Key)
+  console.log('暂停/续传文件-fileInstance', fileInstance)
   let { fileInfo, uploadCheckpoint, resumeHook, Bucket, row } = fileInstance
   let status = Number(fileInfo.status)
   if (status === 3 || !status || fileInstance.changingStatus) return status //已经上传成功的文件不做处理

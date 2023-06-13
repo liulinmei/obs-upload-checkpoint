@@ -1,6 +1,9 @@
 // obs上传公共配置
 import axios from 'axios'
-import { getFileInfoKey, handleResKey } from '../fileConfig/fileInstance'
+import {
+  getFileInfoKey,
+  handleResKey,
+} from '../fileConfig/fileInstance'
 import {
   getUploadFileUrl,
   getBucketAndKeyByUrl,
@@ -261,6 +264,7 @@ function vertifyUpload(fileInstance, getAkSuccess) {
   }
 }
 
+
 export {
   handleBeforeUpload,
   handleUploadError,
@@ -270,5 +274,5 @@ export {
   multiDelObsServeFile,
   downloadFile,
   getSignedFileUrl,
-  vertifyUpload,
+  vertifyUpload
 }
