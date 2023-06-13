@@ -26,7 +26,9 @@
 
 demo地址：[https://github.com/liulinmei/obs-upload-checkpoint/tree/master/example](https://)
 
-![截图](attachment:a7b096ac6e72d5cb354f8c5ae32a0455)
+![a7b096ac6e72d5cb354f8c5ae32a0455.png](attachment:5b4aeec096bc23d994031bfefb19ccf8)
+
+<br/>
 
 ### 基础使用
 
