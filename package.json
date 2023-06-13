@@ -1,9 +1,10 @@
 {
   "name": "obs-upload-checkpoint",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "基于javaScript封装的华为云obs文件上传，支持断点续传、云服务器文件删除等功能",
   "keywords": [
     "obs",
+    "esdk-obs-browserjs",
     "upload",
     "uploadFile",
     "upload-progress",

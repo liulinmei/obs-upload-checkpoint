@@ -124,6 +124,13 @@ const breakpointResume = _.debounce((Key) => {
   pauseOrStartUpload({ Key, upFileArrInstance })
 }, 100)
 
+// 上传类型为断点续传时可用于批量暂停/续传文件操作
+function multiBreakpointResume(keyList) {
+  keyList.map((item) => {
+    pauseOrStartUpload({ Key: item, upFileArrInstance })
+  })
+}
+
 export {
   uploadFile, //上传文件
   breakpointResume, //暂停/续传文件
@@ -132,4 +139,5 @@ export {
   downloadFile, //下载已经上传的文件
   getSignedFileUrl, //获取临时授权访问URL;
   getBucketAndKeyByUrl, //根据文件url获取Bucket、key、endPoint
+  multiBreakpointResume, //批量暂停/续传文件操作
 }
