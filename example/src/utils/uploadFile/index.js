@@ -5,6 +5,7 @@ import {
   multiDelFile,
   downloadFile,
   getSignedFileUrl,
+  multiBreakpointResume,
 } from 'obs-upload-checkpoint'
 const defualBucket = 'your Bucket'
 async function getAuth() {
@@ -59,4 +60,5 @@ export {
   multiObsDelFile,
   obsDownloadFile,
   getSignedUrl,
+  multiBreakpointResume,
 }

@@ -29,10 +29,9 @@
 <script>
 import { Message } from 'element-ui'
 import {
-  test,
   obsUploadFile,
   obsDelFile,
-  multiObsDelFile,
+  multiBreakpointResume,
 } from '@/utils/uploadFile/index'
 import FileList from './fileList'
 export default {
@@ -45,13 +44,10 @@ export default {
       uploadingFile: [],
     }
   },
+  beforeDestroy(){
+    this.stopAllUpload()
+  },
   methods: {
-    linkTest() {
-      console.log('收到点击')
-      console.log('收到点击-test', test)
-      let res = test('dsnfgkjdh')
-      console.log(res)
-    },
     // 文件上传
     uploadFile(param) {
       console.log('文件上传', param)
@@ -101,6 +97,16 @@ export default {
         this.uploadingFile.splice(index, 1)
       }
       console.log('删除成功', code)
+    },
+    // 暂停所有正在上传的文件
+    stopAllUpload() {
+      let uploadingFiles = []
+      this.uploadingFile.map((item) => {
+        if (item.status === 1) {
+          uploadingFiles.push(item.Key)
+        }
+      })
+      multiBreakpointResume(uploadingFiles)
     },
   },
 }
