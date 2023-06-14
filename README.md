@@ -100,6 +100,8 @@ export default {
 |Bucket|桶名（华为云obs桶名，可理解为电脑的c、d、e、f盘，需要obs管理员预先创建）|string|必传|—|shigongbang|
 |endPoint|endPoint|string|必传|—|—|
 |module|文件上传后所处的文件夹，当文件夹在储存服务器中不存在时文件上传成功后会自动新建（建议格式：项目名/模块名）|string|—|—|member_center|
+|TaskNum|分段上传时的最大并发数|int|—|—|3|
+|PartSize|分段大小，单位字节|int|—|100KB~5GB|9MB|
 |getAuth|获取ak、sk函数，一般为调用后端接口获取，返回值需要为Promise对象|function|必传|—|—|
 |onBeforeUpload|文件上传前回调，如果此回调函数返回false则文件不会被上传到obs服务，功能类似element上传组件的的before-upload,回调函数fileInfo参数：文件基本信息|function(fileInfo)|—|—|—|
 |uploadProgress|文件上传进度回调|function(percentage)|—|—|—|

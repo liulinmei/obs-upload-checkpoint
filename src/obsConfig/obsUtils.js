@@ -1,9 +1,6 @@
 // obs上传公共配置
 import axios from 'axios'
-import {
-  getFileInfoKey,
-  handleResKey,
-} from '../fileConfig/fileInstance'
+import { getFileInfoKey, handleResKey } from '../fileConfig/fileInstance'
 import {
   getUploadFileUrl,
   getBucketAndKeyByUrl,
@@ -64,6 +61,8 @@ async function handleUploadSuccess({
   try {
     const { beforeSuccess } = fileInstance
     let res = beforeSuccess && (await beforeSuccess(fileInstance))
+    fileInstance.fileInfo.percentage = 100
+    fileInstance.uploadProgress && fileInstance.uploadProgress(100) //文件上传进度回调
     fileInstance.fileInfo[getFileInfoKey('status', fileInstance.resFileKey)] = 3
     let fileUrl = getUploadFileUrl({ fileInstance, endPoint })
     fileInstance.fileInfo[getFileInfoKey('url', fileInstance.resFileKey)] =
@@ -97,6 +96,7 @@ function progressCB(
   fileInstance.uploadCount = 1
   percentage > prevPercent ? (fileInstance.uploadCount = 1) : '' //当前进度在变化，说明在上传，错误上传次数重置
   let newPercentage = prevPercent > percentage ? prevPercent : percentage
+  newPercentage = newPercentage > 99 ? 99 : newPercentage //解决最后一片段在上传到100%时，网络异常，片段被抛弃，下次再上传时一直卡在100%问题
   // fileInstance.percentage = newPercentage; //记录上传进度(如果上一次的)
   fileInstance.fileInfo.percentage = newPercentage
   fileInstance.uploadProgress && fileInstance.uploadProgress(newPercentage) //文件上传进度回调
@@ -264,7 +264,6 @@ function vertifyUpload(fileInstance, getAkSuccess) {
   }
 }
 
-
 export {
   handleBeforeUpload,
   handleUploadError,
@@ -274,5 +273,5 @@ export {
   multiDelObsServeFile,
   downloadFile,
   getSignedFileUrl,
-  vertifyUpload
+  vertifyUpload,
 }

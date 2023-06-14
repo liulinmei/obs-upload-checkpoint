@@ -92,8 +92,8 @@ async function uploadFileObsServe({
           fileInstance.obsInited = true //obs初始化完成
           // fileInstance.uploadCount = 1;
         },
-        TaskNum: 6, //分段上传时的最大并发数，默认为1。
-        PartSize: 9 * 1024 * 1024, //分段大小，单位字节，取值范围是100KB~5GB，默认为9MB
+        TaskNum: fileInstance.TaskNum || 3, //分段上传时的最大并发数，默认为1。
+        PartSize: fileInstance.PartSize || 9 * 1024 * 1024, //分段大小，单位字节，取值范围是100KB~5GB，默认为9MB
         ...fileParams,
       },
       (err, result) => {
